@@ -31,4 +31,27 @@ y como $e^x > 0 \ \  \forall x \in \mathbb{R}$, el precio nunca puede volverse n
 
 
 
-Una limitación de usar el rendimiento logarítmico es que estos rendimientos no son aditivos entre activos. En nuestro caso es irrelevante ya que solamente trabajaremos con un índice ya calculado y no con una cartera propia. Aún así conviene mencionarlo como una limitación honesta del uso de rendimientos logarítmicos
+Una limitación de usar el rendimiento logarítmico es que estos rendimientos no son aditivos entre activos. En nuestro caso es irrelevante ya que solamente trabajaremos con un índice ya calculado y no con una cartera propia. Aún así conviene mencionarlo como una limitación honesta del uso de rendimientos logarítmicos.
+
+
+#### **02. La volatilidad realizada y el horizonte de predicción**
+
+Empecemos este apartado recordando varias definiciones básicas:
+
+- **Varianza** de una variable aleatoria **X**: el valor esperado del cuadrado de su desviación respecto a la media, $Var(X) = \mathbb{E}[(X- \mathbb{E}[X])^2]$. Mide la dispersión.
+- **Desviación típica:** su raíz cuadrada, $\sigma = \sqrt{Var(X)}$. Tiene la ventaja de estar en las mismas unidades que $X$.
+- **Volatilidad** es simplemente la desviación típica de los rendimiento
+
+Y aquí esta el problema central de todo este campo. Tenemos que $\sigma$ es un parametro de la distribución que genera los rendimientos, no es un valor que podamos "leer" en nigún lado. Lo que podemos observar concretamente son los rendimientos de cada día, pero la volatilidad por el contrario es una variable latente, es decir, una magnitud que existe en el modelo pero no es directamente leible. Esto tiene una consecuencia que se arrastraremos durante todo el trabajo: no podemos comparar nuestras predicciones contra la verdad, porque la verdad no esta disponible; tan solo podremos compararlas con un estimador ruidosos de la verdad.
+
+
+Por otro lado, cabe destacar también que si tenemos $w$ rendimientos, el estimador natural de la varianza es la varianza muestral: $$\hat{\sigma}^2 = \frac{1}{w-1} \sum_{i=1}^w(r_i-\bar{r})^2$$
+
+Pero en finanzas se usa casi siempre una versión simplificada: $$\hat{\sigma}^2 = \frac{1}{w} \sum_{i=1}^w r_i^2$$
+
+Se trabaja de esta manera ya que el rendimiento logarítmico medio diario de un índice rona los $3x10^{-4}$. Al elevarlo al cuadrado queda del orden de $10^{-7}$. Pero el termino $r_i^2$ típico es del orden de $10^{-4}$. Por lo tanto la media aporta alrededor de una milésima del total, es decir es despreciable. En cambio, **estimarla introduce ruido**, porque $\bar{r}$ es a su vez una estimación con error. Es decir, podemos verlo como un intercambio sesgo-varianza, no una simplificación por comodidad.
+
+
+Otro aspecto importante a destacar sobre la volatilidad es que por convención se exresa en escala anual. Es decir los rendimientos son diarios, pero la volatilidad se expresa anualmente. Si los $r_i$ son independientes y con varianza $\sigma^2$, la varianza de la suma de $k$ de ellos es $k\sigma^2$, y por tanto la volatilidad a $k$ días es $\sqrt{k} \sigma$. Como tenemos que un año bursátil tiene aproximadamente 252 días de negociación, se multiplica la varianza diaria por $\sqrt{252}$. Nuestra definición quedaría tal que: $$RV_t^{(w)} = \sqrt{\frac{252}{w} \sum_{i=0}^{w-1}r_{t-i}^2}$$ 
+
+Es decir un valor de 0,2 significa "20\% anual". Una advertencia importante sobre la hipóteis: los rendimientos tienen una correlación casi nula, pero sus cuadrados están fuertemente correlacionados, y esto es lo que se denomina con agrupamiento de volatilidad. Es decir, la anualización sigue siendo la convención universal, pero es una aproximación.
