@@ -2,6 +2,13 @@
 
 Documento en donde iremos añadiendo en bruto las páginas y los conceptos sobre los cuales vamos obteniendo la información.
 
+### **Referencias sobre conceptos técnicos de código**
+
+Conceptos de repaso sobre indexación de array de Numpy
+
+[array Numpy](numpy.org/doc/stable/user/basics.indexing.html)
+
+
 ### **Parte 00_planteamiento**
 
 #### **Sobre volatilidad y comportamiento de series financieras**
