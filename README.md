@@ -3,7 +3,7 @@
 Trabajo de Fin de Grado en Matemáticas.
 Universidad Internacional de Valencia (VIU).
 
-**Autor:** Víctor Sin Navarrete
+**Autor:** Víctor Sin Navarrete <br>
 **Tutora:** Inma Garcés Andrés
 
 ## Descripción
