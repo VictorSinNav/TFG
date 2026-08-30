@@ -1,4 +1,4 @@
-## Volatilidad
+## Datos y entradas
 
 #### **01. Rendimiento logarítmico**
 
@@ -54,4 +54,13 @@ Se trabaja de esta manera ya que el rendimiento logarítmico medio diario de un 
 
 Otro aspecto importante a destacar sobre la volatilidad es que por convención se exresa en escala anual. Es decir los rendimientos son diarios, pero la volatilidad se expresa anualmente. Si los $r_i$ son independientes y con varianza $\sigma^2$, la varianza de la suma de $k$ de ellos es $k\sigma^2$, y por tanto la volatilidad a $k$ días es $\sqrt{k} \sigma$. Como tenemos que un año bursátil tiene aproximadamente 252 días de negociación, se multiplica la varianza diaria por $\sqrt{252}$. Nuestra definición quedaría tal que: $$RV_t^{(w)} = \sqrt{\frac{252}{w} \sum_{i=0}^{w-1}r_{t-i}^2}$$ 
 
-Es decir un valor de 0,2 significa "20\% anual". Una advertencia importante sobre la hipóteis: los rendimientos tienen una correlación casi nula, pero sus cuadrados están fuertemente correlacionados, y esto es lo que se denomina con agrupamiento de volatilidad. Es decir, la anualización sigue siendo la convención universal, pero es una aproximación.
+Es decir un valor de 0,2 significa "20\% anual". Una advertencia importante sobre la hipóteis: los rendimientos tienen una correlación casi nula, pero sus cuadrados están fuertemente correlacionados, y esto es lo que se denomina con agrupamiento de volatilidad. Es decir, la anualización sigue siendo la convención universal, pero es una aproximación. Intuitivamente esto quiere decir que **el signdo del movimiento es impredecible; su magnitud no**. Es decir, que el mercado ayer se moviera un 3\% no nos dice si hoy subira o bajará, pero sí nos dice que probablemente hoy también se movera mucho.
+
+Ahora nos adentramos en una importante decisión: **el horizonte de predicción**. 
+El objetivo del modelo es la volatilidad realizada de los cinco días siguientes, y no la del día inmediatamente posterior. La razón es que la volatilidad es una variable latente que solo podemos medir a través de un estimador construido con los rendimientos observados, y ese estimador es tanto más ruidoso cuantas menos observaciones intervienen en él. En el caso extremos del horizonte de un día, caso el cual se apoya solamente en un único rendiemiento al cuadrado se observa que:
+
+Si suponemos $r_t = \sigma_t z_t$ con $z_t \ \thicksim N(0,1)$, entonces por definición $\frac{r_t^2 }{\sigma_t^2}  \thicksim \chi_1^2$, distribución cuya varianza es 2 (es decir $2k$ con $k=1$) y media 1. De modo que el error relativo de la estimación de la varianza asciende al $\sqrt{2} \approx 141\%$ y, tras tomar la raíz cuadrada, en torno al 76\% sobre la volatilidad. Con un obketivo tan contaminado y ruidoso, todos los modelos exhibirian errores similares y las diferencias quedarían enmascaradas. Promediar sobre cinco días reduce el error relativo del estimador a aproximadamente un 32%, nivel que permite discriminar entre especificaciones alternativas. 
+
+No obstante, esta elección no equivale, sin embargo a que horizontes más largos sean preferibles sin más. Es decir, si ampliamos la ventana reducimos el ruido de medición, pero construimos sobre ventanas solapadas. El número de observaciones efectivamente independientes es del orden de n/w , de modo que al alargar la ventana reducimos el tamaño real de la muestra, y sumado a que a medida que crece el horizonte, la volatilidad futura se aproxima progresivamente a la pasada y por tanto el problema de predicción se vuelve trivial.
+
+

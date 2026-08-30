@@ -30,3 +30,15 @@ Buen punto de partida para empezar con conceptos de lógica difusa. Reutilizable
 Para una orientación rápida antes de entrar totalmente en materia, la entrada de la wikipedia en español es correct.
 
 [Wikipedia: ANFIS](es.wikipedia.org/wiki/Sistema_de_inferencia_neuro_borroso_adaptativo)
+
+
+#### **Medida de volatilidad, es la suma de rendimientos al cuadrado**
+
+[Realized Volatility](chicagofed.org/-/media/publications/working-papers/2008/wp2008-14-pdf.pdf)
+
+
+#### **La solución Corsi**
+
+La referencia obligada del modelo HAR y de la elección del 1, 5 y 22.
+
+Corsi, F. (2009). A simple approximate long-memory model of realized volatility. Journal of Financial Econometrics, 7(2), 174–196.
