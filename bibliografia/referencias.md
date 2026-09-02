@@ -42,3 +42,12 @@ Para una orientación rápida antes de entrar totalmente en materia, la entrada 
 La referencia obligada del modelo HAR y de la elección del 1, 5 y 22.
 
 Corsi, F. (2009). A simple approximate long-memory model of realized volatility. Journal of Financial Econometrics, 7(2), 174–196.
+
+#### **SP500**
+
+[Wikipedia SP500](https://es.wikipedia.org/wiki/S%26P_500)
+
+
+#### **Referencia de datos yfinance**
+
+[yfinance data](https://ranaroussi.github.io/yfinance/reference/api/yfinance.download.html)
