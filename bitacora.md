@@ -9,3 +9,6 @@
 "Decido utilizar como fechas el intervalo 2000-01-01 / 2026-08-31 , rango el cual queda congelado para la realización del trabajo"
 
 "Reviso los datos descargados y parecen correctos y sin fallos (nº de filas correcto, rango correcto, no duplicados y no NaN)"
+
+"E0.5 completado. Entrenamiento en escala logarítmica"
+

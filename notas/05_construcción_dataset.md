@@ -56,3 +56,29 @@ Los modelos se entrenan sobre $\log RV$ en lugar de $RV$, por tres motivos de mu
 1. La distribución de la volatilidad es fuertemente asimétrica a la derecha, mientras que la de su logaritmo es aproximadamente normal. Esto pasa porque la mayoría de las veces la volatilidad esta en niveles bajoss, pero explota en momentos de pánico y estres. Esto genera una distribución asimétrica con una cola larga a la derecha, y entonces el algoritmo de optimización, descenso de gradiente, se vuelve inestable. Con el logarítmo se transforma aproximadamente en una normal
 2. Al deshacer el logaritmo con la exponencial, la predicción es positiva por construcción. Sin este detalle podriamos encontrarnos casos con volatilidad negativa,lo cual no tiene sentido en el mundo real
 3. Los picos de las crisis dejan de dominar el error cuadrático, de modo que el ajuste no se concentra en un puñado de días extremos.
+
+
+#### **Partición temporal**
+
+El objetivo ahora es el de dividir el dataset en entrenamiento, validación y prueba. Esta partición no podemos realizarla al azar, sino que deberemos realizarla por fechas. Esto es indispensable hacerlo así, ya que la volatilidad de hoy, esta altamente correlacionada con la volatilidad de ayer y a la de mañana. Por ejemplo, si el modelo entrena con datos de 2022 para predecir lo ocurrido en 2010, le estaríamos permitiendo saber el futuro. Es decir, de hacerlo al azar, el modelo no aprendería las dinámicas subyacentes de la volatilidad, sino que simplemente memorizaría puntos vecinos. 
+
+
+Dividimos el dataset de la siguiente manera:
+
+
+| Conjunto | Periodo | Uso |
+|---|---|---|
+| Entrenamiento | 2000-01-01 a 2015-12-31 | Ajustar parámetros. Incluye la crisis de 2008 |
+| Validación | 2016-01-01 a 2019-12-31 | Hiperparámetros y parada temprana |
+| Prueba | 2020-01-01 en adelante | Evaluación final. Incluye el COVID |
+| Estrés | 2020-02-15 a 2020-04-30 | Subperiodo aislado dentro de prueba |
+
+
+#### **Puntos de fuga**
+
+Una vez dividido el modelo, el objetivo es asegurarnos bien de que no tenemos datos repetidos en ambas particiones. Es decir, el objetivo $y-t$ mira 5 días hacia delante, por lo tanto la última fila de entrenamiento (2015-12-31), contendra rendimientos de enero de 2026, los cuales estan en validación. Esto se resolvera usando embargo (eliminando las últimas 5 filas de cada conjunto antes de la siguient paritción)
+
+
+#### **Estandarización**
+
+Procedemos a estandarizar nuestros datos para que el descenso del gradiente funcione correctamente. Para evitar filtrar información del futuro, hemos de estandarizar solamente con los datos del entrenamiento. Es el equivalente a cuando el modelo este funcionando en la vida real y no pueda ver una media del futuro. Tendrá que usar la media y la desviación históricas que aprendio durante el entrenamiento

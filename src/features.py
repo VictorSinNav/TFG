@@ -36,7 +36,7 @@ def calcular_rendimientos(precios: pd.DataFrame) -> pd.Series:
 
 def volatilidad_pasada(r: pd.Series, w: int) -> pd.Series:
     """RV_t^(w) = sqrt( (252/w) * suma de r^2 sobre los ÚLTIMOS w días ).
-    
+
     rolling(w) define una ventana móvil que TERMINA en la fila actual: para
     la fila t usa las filas t-w+1 ... t. Solo mira hacia atrás, así que no
     puede haber fuga de información.
@@ -83,8 +83,9 @@ def construir_dataset(guardar: bool = True) -> pd.DataFrame:
     # --- Escala logarítmica ---
     # Se entrena en log (mejor convergencia, predicciones positivas al
     # deshacerlo) pero se evalúa en escala original. Guardamos ambas.
+    EPS = 1e-8   # evita log(0) cuando rv_1 vale exactamente cero
     for col in [f"rv_{w}" for w in VENTANAS] + ["y"]:
-        df[f"log_{col}"] = np.log(df[col])
+        df[f"log_{col}"] = np.log(df[col] + EPS)
 
     # --- Limpieza ---
     # Primeras 22 filas: ventana incompleta. Últimas 5: no hay futuro.
