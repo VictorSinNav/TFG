@@ -50,7 +50,7 @@ Así pues, para cada día $t$, el vector de entrada es: $$x_t = (RV_t^{(1)}, RV_
 en donde como fijamos anteriormente, $$RV_t^{(w)} = \sqrt{\frac{252}{w} \sum_{i=0}^{w-1}r_{t-i}^2}$$
 
 
-Una pregunta que podría aparecer en este momento sería: ¿por qué utilizamos e variables en vez de 10?. El motivo principal es la maldición de la dimensionalidad, especialmente de los sistemas difusos. Hemos de pensar que un sistema difuso contiene una regla por cada combinacion posible. Con $n$ variables de entrada y $m$ conjuntos difusos por variable tenemos que: $$nº de reglas = m^n$$
+Una pregunta que podría aparecer en este momento sería: ¿por qué utilizamos e variables en vez de 10?. El motivo principal es la maldición de la dimensionalidad, especialmente de los sistemas difusos. Hemos de pensar que un sistema difuso contiene una regla por cada combinacion posible. Con $n$ variables de entrada y $m$ conjuntos difusos por variable tenemos que: $$nº \ \  de \ \  reglas = m^n$$
 
 Por ejemplo:
 1. Para nuestro caso, **3 entradas** con por ejemplo **3 posibles conjuntos**, existen un total de 27 reglas.

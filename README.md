@@ -1,6 +1,11 @@
-# Aspectos matemáticos de las redes neuronales y su extensión a modelos difusos
+# TFG - Aspectos matemáticos de las redes neuronales y su extensión a modelos difusos
+
+Trabajo de Fin de Grado en Matemáticas.
+Universidad Internacional de Valencia (VIU).
 
 **Autor:** Víctor Sin Navarrete <br>
+**Tutora:** Inma Garcés Andrés
+
 
 
 ## Descripción
