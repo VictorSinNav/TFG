@@ -145,3 +145,126 @@ class ANFIS(nn.Module):
 
         # Capa 5: localmente lineal, globalmente no lineal.
         return (w_norm * f).sum(dim=1)                 # (N,)
+
+
+
+def inicializar_por_percentiles(modelo: "ANFIS", train, coef_har=None) -> None:
+    """Coloca premisas y consecuentes en valores sensatos antes de entrenar.
+
+
+    Estrategia:
+      - Centros en los percentiles de cada variable, para que cada conjunto
+        caiga en una zona poblada.
+      - Anchuras iguales a la mitad de la separación entre centros
+        consecutivos, de modo que las campanas se solapen.
+      - b = 1 (campana estándar).
+      - Consecuentes iguales a los coeficientes de HAR: como HAR es ANFIS
+        con una sola regla, esto equivale a partir de la solución de HAR y
+        garantiza que el entrenamiento solo pueda mejorar desde ahí.
+
+    """
+    n_conj = modelo.n_conjuntos
+    X = train[ENTRADAS].values
+
+    # Percentiles equiespaciados: con 3 conjuntos -> 10, 50, 90.
+    ps = np.linspace(10, 90, n_conj)
+    centros = np.array([np.percentile(X[:, k], ps)
+                        for k in range(modelo.n_entradas)])   # (3, 3)
+
+    # Anchura: mitad de la separación media entre centros consecutivos.
+    # Con este valor, en el punto medio entre dos centros ambas campanas
+    # valen aproximadamente 0.5, lo que asegura solapamiento.
+    separaciones = np.diff(centros, axis=1).mean(axis=1, keepdims=True)
+    anchuras = np.repeat(separaciones / 2, n_conj, axis=1)     # (3, 3)
+
+    with torch.no_grad():   # modificamos parámetros sin registrar gradientes
+        modelo.pertenencia.c.copy_(torch.tensor(centros, dtype=torch.float32))
+        modelo.pertenencia.a.copy_(torch.tensor(anchuras, dtype=torch.float32))
+        modelo.pertenencia.log_b.fill_(0.0)                    # b = 1
+
+        if coef_har is not None:
+            # coef_har = [beta_0, beta_1, beta_2, beta_3].
+            # Todas las reglas arrancan con la misma recta: la de HAR.
+            modelo.q.fill_(float(coef_har[0]))
+            modelo.p.copy_(torch.tensor(coef_har[1:], dtype=torch.float32)
+                           .repeat(modelo.n_reglas, 1))
+        else:
+            modelo.p.zero_()
+            modelo.q.zero_()
+
+    print(f"[anfis] Centros por variable:\n{centros.round(3)}")
+    print(f"[anfis] Anchuras: {anchuras[:, 0].round(3)}")
+
+
+def entrenar_anfis(modelo, train, val, epocas=3000, lr_consec=0.01,
+                   lr_premisa=0.001, paciencia=200):
+    """Entrena ANFIS por descenso de gradiente con parada temprana.
+
+    Mínimos cuadrados para los consecuentes y gradiente para las premisas. Aquí usamos gradiente sobre
+    todos los parámetros, porque la inicialización ya parte de la solución
+    de HAR, que es lo que los mínimos cuadrados darían en el primer paso.
+
+    Tasas de aprendizaje distintas por grupo: mover un centro reorganiza qué
+    reglas se activan y tiene un efecto mucho más brusco que ajustar un
+    coeficiente de una recta. Un paso diez veces menor en las premisas evita
+    que la estructura difusa se destruya en las primeras épocas.
+    """
+    torch.manual_seed(SEMILLA)
+
+    X_tr = torch.tensor(train[ENTRADAS].values, dtype=torch.float32)
+    y_tr = torch.tensor(train[OBJETIVO].values, dtype=torch.float32)
+    X_val = torch.tensor(val[ENTRADAS].values, dtype=torch.float32)
+    y_val = torch.tensor(val[OBJETIVO].values, dtype=torch.float32)
+
+    perdida = nn.MSELoss()
+
+    # Adam admite grupos de parámetros con hiperparámetros propios.
+    optimizador = torch.optim.Adam([
+        {"params": modelo.pertenencia.parameters(), "lr": lr_premisa},
+        {"params": [modelo.p, modelo.q], "lr": lr_consec},
+    ])
+
+    mejor_val, mejor_estado, sin_mejora = float("inf"), None, 0
+    historial = []
+
+    for epoca in range(epocas):
+        modelo.train()
+        optimizador.zero_grad()
+        error = perdida(modelo(X_tr), y_tr)
+        error.backward()
+        optimizador.step()
+
+        modelo.eval()
+        with torch.no_grad():
+            error_val = perdida(modelo(X_val), y_val).item()
+        historial.append((error.item(), error_val))
+
+        if error_val < mejor_val - 1e-7:      # tolerancia: evita paradas por ruido
+            mejor_val, sin_mejora = error_val, 0
+            mejor_estado = {k: v.clone() for k, v in modelo.state_dict().items()}
+        else:
+            sin_mejora += 1
+            if sin_mejora >= paciencia:
+                print(f"[anfis] Parada temprana en la época {epoca}")
+                break
+
+    modelo.load_state_dict(mejor_estado)
+    print(f"[anfis] MSE de validación: {mejor_val:.5f}")
+
+    # Diagnóstico: si las anchuras se han disparado, las campanas se aplanan,
+    # todas las reglas pesan igual y ANFIS degenera en HAR.
+    with torch.no_grad():
+        a_med = modelo.pertenencia.a.abs().mean().item()
+    print(f"[anfis] Anchura media final: {a_med:.3f}")
+
+    return modelo, historial
+
+
+def predecir_anfis(modelo, datos) -> "pd.Series":
+    """Predice en ESCALA ORIGINAL (deshace el logaritmo con exp)."""
+    import pandas as pd
+    X = torch.tensor(datos[ENTRADAS].values, dtype=torch.float32)
+    modelo.eval()
+    with torch.no_grad():
+        log_pred = modelo(X).numpy()
+    return pd.Series(np.exp(log_pred), index=datos.index)
