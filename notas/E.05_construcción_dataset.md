@@ -72,7 +72,7 @@ Dividimos el dataset de la siguiente manera:
 | Validación | 2016-01-01 a 2019-12-31 | Hiperparámetros y parada temprana |
 | Prueba | 2020-01-01 en adelante | Evaluación final. Incluye el COVID |
 | Estrés | 2020-02-15 a 2020-04-30 | Subperiodo aislado dentro de prueba |
-
+ 
 
 #### **Puntos de fuga**
 
