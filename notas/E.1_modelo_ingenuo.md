@@ -1,4 +1,4 @@
-#### **08. El modelo ingenuo y las métricas**
+#### **1. El modelo ingenuo y las métricas**
 
 Antes de construir nada complicado hace falta saber contra qué comparamos. Un RMSE de 0,05 no significa nada por sí solo: puede ser excelente o ridículo según lo que consiga un método trivial sobre los mismos datos.
 
