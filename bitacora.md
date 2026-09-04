@@ -14,3 +14,4 @@
 
 "E0.5 completado. Implementado splits.py . Partición cronologica. Embargo de 5 filas en las fronteras y normalización con los estadísticos de train. Creación de figura para la memoria" 
 
+"E0.6. Exploración de los datos completada corroborando las decisiones teóricas previas"
