@@ -51,3 +51,21 @@ Corsi, F. (2009). A simple approximate long-memory model of realized volatility.
 #### **Referencia de datos yfinance**
 
 [yfinance data](https://ranaroussi.github.io/yfinance/reference/api/yfinance.download.html)
+
+
+
+#### **HAR y volatilidad realizada**
+
+  
+Müller, U. et al. (1993). *Fractals and Intrinsic Time: A Challenge to
+Econometricians*. 
+
+
+Patton, A. J. (2011). *Volatility Forecast Comparison Using ImperfectVolatility Proxies*. Journal of Econometrics, 160(1), 246–256. Justifica el uso de MSE y QLIKE como únicas pérdidas robustas cuando el
+objetivo es un estimador ruidoso de la volatilidad latente.
+
+#### **Redes neuronales**
+
+Cybenko, G. (1989). *Approximation by Superpositions of a Sigmoidal Function*. Mathematics of Control, Signals and Systems, 2(4), 303–314.
+
+Hornik, K. (1991). *Approximation Capabilities of Multilayer Feedforward Networks*. Neural Networks, 4(2), 251–257. Establece que una red con una sola capa oculta es un aproximador universal para cualquier función de activación acotada y no constante, generalizando el resultado de Cybenko.

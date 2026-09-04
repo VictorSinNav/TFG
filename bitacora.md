@@ -18,3 +18,9 @@
 
 "E.1. Creación del modelo ingenuo con ventanas de 1,5, y 22 días. Se decide que la mejor ventan es 5 días y que la métrica más relevante para evaluar el modelo es QLIKE"
 
+"E.2. Creación del modelo HAR por MCO sobre las tres escalas logarítmicas, con transformación inversa a escala original para evaluar"
+
+"E.2. Se pospone E2 (GARCH); HAR es el baseline prioritario por compartir entradas con ANFIS."
+
+"E.2. Entradas sin normalizar: en una regresión lineal es indiferente y así los
+  coeficientes son directamente legibles."

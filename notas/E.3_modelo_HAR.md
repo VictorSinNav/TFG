@@ -1,4 +1,4 @@
-#### **2. El modelo HAR**
+#### **3. El modelo HAR**
 
 El HAR (*Heterogeneous Autoregressive*) de Corsi (2009) es el modelo de referencia en la predicción de volatilidad realizada, y para este trabajo es la base más importante de todos.
 
